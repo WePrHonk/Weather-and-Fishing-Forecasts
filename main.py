@@ -192,7 +192,7 @@ while True:
     print(f"⏰ Hour: {hour}:00")
     print("------------------------------")
     print(f"🌡 Temperature: {temp}°C")
-    print(f"💨 Wind Max Speed: {wind_speed} m/s  ({round(wind_speed*3.6, 1)} km/h)")
+    print(f"💨 Wind Speed: {wind_speed} m/s  ({round(wind_speed*3.6, 1)} km/h)")
     print(f"🧭 Wind Direction: {wind_direction}°")
     print(f"🌧 Precipitation: {rain} mm")
     print(f"🌐 Pressure: {round(pressures * 0.75006, 1)} mmHg  ({pressures} hPa)")

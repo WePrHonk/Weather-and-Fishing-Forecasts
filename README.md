@@ -52,7 +52,7 @@ python main.py
 
 ## Example
 
-Example of program output:
+Example Output:
 
 ```text
 City: London
@@ -60,7 +60,7 @@ Coordinates: 51.50853, -0.12574
 Hour: 21:00
 --------------------------------
 Temperature: 24.0°C
-Wind Max Speed: 6.8 m/s  (24.5 km/h)
+Wind Speed: 6.8 m/s  (24.5 km/h)
 Wind Direction: 344°
 Precipitation: 0.0 mm
 Pressure: 762.1 mmHg  (1016.1 hPa)
@@ -70,7 +70,7 @@ Fishing activity is excellent!     7.1/10
 ```
 
 ## Screenshot
-Example of program outpot:
+Example of program output:
 ![Fishing forecast example](screenshots/fishing_forecast_example.png)
 
 ## Future Improvements
