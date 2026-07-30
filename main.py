@@ -1,6 +1,25 @@
 import requests
 from datetime import datetime
 
+def search_city(city_name):
+    response = requests.get(
+        "https://geocoding-api.open-meteo.com/v1/search",
+        params={
+            "name": city_name,
+            "count": 5,
+            "language": "en",
+            "format": "json"
+        }
+    )
+
+    data = response.json()
+
+    if "results" not in data:
+        return None
+
+    return data["results"]
+    
+    
 def calculate_time_score(hour):
     if 5 <= hour <= 9 or 18 <= hour <= 22:
         return 2.2
@@ -69,20 +88,50 @@ def calculate_cloud_score(cloud):
 
 
 while True:
-    print("\n---- ENTER LOCATIONCOORDINATES ----")
-    print("0 - Exit")
+    print("\n---- ENTER CITY NAME ----")
 
-    city_name = input("City name (or 0 to exit): ").strip()
-    if city_name == "0":
+    name = input("Enter city name (or 0 to exit): ").strip()
+
+    if name == "0":
         print("Exiting...")
         break
 
-    try:
-        lat = float(input("Latitude: ").replace(",", "."))
-        lon = float(input("Longitude: ").replace(",", "."))
-    except ValueError:
-        print("Error! Please enter a number for latitude and longitude.")
+    cities = search_city(name)
+
+    if cities is None:
+        print("City not found!")
         continue
+    
+    if len(cities) == 1:
+        selected = cities[0]
+        print(f"Found: {selected['name']}, {selected.get('country', '')}")
+
+    else:
+        print("\nFound cities:")
+
+    for i, city in enumerate(cities, start=1):
+        country = city.get("country", "Unknown")
+        admin1 = city.get("admin1", "")
+        print(f"{i}. {city['name']}, {admin1}, {country}")
+
+    while True:
+        try:
+            choice = int(input("Choose a city: "))
+
+            if 1 <= choice <= len(cities):
+                break
+            else:
+                print(f"Please enter a number from 1 to {len(cities)}.")
+
+        except ValueError:
+            print("Please enter numbers only!")
+
+    selected = cities[choice - 1]
+
+    lat = selected["latitude"]
+    lon = selected["longitude"]
+    name = selected["name"]
+
 
     while True:
         try:
@@ -96,7 +145,7 @@ while True:
                 print("Enter a number from 0 to 23")
 
         except ValueError:
-            print("Please enter numbers only!")
+            print("Enter only a number!")
 
     response = requests.get(
         "https://api.open-meteo.com/v1/forecast",
@@ -116,12 +165,12 @@ while True:
     times = data["hourly"]["time"]
 
     if time_key not in times:
-        print("No weather data available for this hour.")
+        print("No data for this hour")
+        continue
 
     index = times.index(time_key)
     start_index = max(0, index - 4)
     pressures_list = data["hourly"]["pressure_msl"][start_index : index + 1]
-
     temp = data["hourly"]["temperature_2m"][index]
     wind_speed = data["hourly"]["wind_speed_10m"][index]
     wind_direction = data["hourly"]["wind_direction_10m"][index]
@@ -138,22 +187,23 @@ while True:
 
     score = round(time_score + temp_score + wind_speed_score + wind_direction_score + pressure_score + cloud_score, 1)
 
-    print(f"\n🌍 City: {city_name}")
+    print(f"\n🌍 City: {name}")
     print(f"📍 Coordinates: {lat}, {lon}")
-    print("--------------------------------")
-    print(f"⏰ Time: {hour}:00")
+    print(f"⏰ Hour: {hour}:00")
+    print("------------------------------")
     print(f"🌡 Temperature: {temp}°C")
-    print(f"💨 Max Wind Speed: {wind_speed} m/s ({round(wind_speed * 3.6, 1)} km/h)")
+    print(f"💨 Wind Max Speed: {wind_speed} m/s  ({round(wind_speed*3.6, 1)} km/h)")
     print(f"🧭 Wind Direction: {wind_direction}°")
     print(f"🌧 Precipitation: {rain} mm")
-    print(f"🌐 Pressure: {round(pressures * 0.75006, 1)} mmHg ({pressures} hPa)")
+    print(f"🌐 Pressure: {round(pressures * 0.75006, 1)} mmHg  ({pressures} hPa)")
     print(f"☁️ Cloud Cover: {cloud} %")
-    print("--------------------------------")
+    print("------------------------------")
+
     if 0 <= score <= 2.5:
-        print(f"🔴 Fish conditions are very poor. Better stay home!     {score} / 10")
+        print(f"🔴 Fish activity is very weak, stay home!     {score} / 10")
     elif 2.5 < score <= 5:
-        print(f"🟠 Fish conditions are poor!     {score} / 10")
+        print(f"🟠 Fish activity is poor!     {score} / 10")
     elif 5 < score <= 7.5:
-        print(f"🟢 Fish conditions are good!     {score} / 10")
+        print(f"🟢 Fish activity is good!     {score} / 10")
     elif 7.5 < score <= 10:
-        print(f"🔵 Fish conditions are excellent!     {score} / 10")
+        print(f"🔵 Fish activity is excellent!     {score} / 10")

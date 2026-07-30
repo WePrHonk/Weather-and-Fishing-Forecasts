@@ -28,7 +28,7 @@ A Python application that uses weather data from Open-Meteo API to analyze fishi
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/weather-and-fishing-forecasts.git
+git clone https://github.com/WePrHonk/Weather-and-Fishing-Forecasts.git
 ```
 
 2. Install the required library:
@@ -56,23 +56,25 @@ Example of program output:
 
 ```text
 City: London
-Hour: 6:00
+Coordinates: 51.50853, -0.12574
+Hour: 21:00
 --------------------------------
-Temperature: 22°C
-Wind: 3 m/s (10,8 km/h)
-Wind Direction: 180°
+Temperature: 24.0°C
+Wind Max Speed: 6.8 m/s  (24.5 km/h)
+Wind Direction: 344°
 Precipitation: 0.0 mm
-Pressure: 760 mmHg (1013,25 hPa)
-Cloud Cover: 70%
+Pressure: 762.1 mmHg  (1016.1 hPa)
+Cloud Cover: 88%
 --------------------------------
-Fishing activity is excellent!     8.5/10
+Fishing activity is excellent!     7.1/10
+```
 
 ## Screenshot
 Example of program outpot:
-![Fishing forecast example](screenshots/fishing_forecast_example.png.png)
+![Fishing forecast example](screenshots/fishing_forecast_example.png)
+
 ## Future Improvements
 
-- Add city search instead of entering coordinates
 - Add weather forecast for multiple days
 - Improve fishing activity calculation algorithm
 - Add data visualization with charts
